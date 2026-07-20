@@ -55,7 +55,7 @@
     <p>SUNOPEN M 系列 · 可调宽压降压型 · 12V / 24V 平台</p>
     <div>
       <span class="tag">MPPT 追踪效率 &gt;99.9%</span>
-      <span class="tag">最大 300W</span>
+      <span class="tag">最大 200W(12V)/350W(24V)</span>
       <span class="tag">Modbus RS485 / TTL</span>
     </div>
   </header>
@@ -68,11 +68,12 @@
     <div class="metric m-bat bat"><div class="label">电池电量 SOC</div><div class="value" id="soc">--<span class="unit">%</span></div></div>
     <div class="metric m-load load"><div class="label">负载功率</div><div class="value" id="loadW">--<span class="unit">W</span></div></div>
     <div class="metric m-sys sys"><div class="label">今日发电量</div><div class="value" id="today">--<span class="unit">Wh</span></div></div>
+    <div class="metric m-sys sys"><div class="label">累计发电量</div><div class="value" id="total">--<span class="unit">Wh</span></div></div>
     <div class="metric m-sys sys"><div class="label">系统温度</div><div class="value" id="temp">--<span class="unit">℃</span></div></div>
     <div class="metric m-bat bat"><div class="label">充电阶段</div><div class="value" id="stage" style="font-size:20px;">--</div></div>
   </div>
   <p style="font-size:12.5px;color:#9ca3af;margin-top:10px;">
-    数据来自接口 <a href="/status">/status</a>（每 3 秒自动刷新，演示为模拟数据，真机可对接 Modbus 寄存器）
+    数据来自接口 <a href="/status">/status</a>（每 3 秒自动刷新；已支持 ESP32 上报真实数据，未连接时显示模拟值）
   </p>
 
   <h2>核心特点</h2>
@@ -96,14 +97,15 @@
     <table>
       <tr><th>适用平台</th><td>12V / 24V</td></tr>
       <tr><th>系统模式</th><td>降压（Buck）</td></tr>
-      <tr><th>额定充电电流</th><td>12.5 A</td></tr>
-      <tr><th>最大 PV 输入电流</th><td>10 A</td></tr>
-      <tr><th>12V 平台最大功率</th><td>180 W</td></tr>
-      <tr><th>24V 平台最大功率</th><td>300 W</td></tr>
-      <tr><th>Max PV 开路电压 (Voc)</th><td>56 V</td></tr>
+      <tr><th>额定充电电流</th><td>14.5 A（超过自动限流）</td></tr>
+      <tr><th>最大 PV 输入电流</th><td>12 A（超过自动限流）</td></tr>
+      <tr><th>12V 平台最大功率</th><td>200 W（超过自动限功）</td></tr>
+      <tr><th>24V 平台最大功率</th><td>350 W（超过自动限功）</td></tr>
+      <tr><th>Max PV 开路电压 (Voc)</th><td>12V平台16~56V / 24V平台30~56V</td></tr>
       <tr><th>系统最大耐压</th><td>60 V (±2%)</td></tr>
-      <tr><th>MPPT 追踪效率</th><td>&gt;99.9%</td></tr>
-      <tr><th>额定负载电流</th><td>10 A</td></tr>
+      <tr><th>MPPT 追踪效率</th><td>&gt;99.9%（追踪速率 &lt;1ms）</td></tr>
+      <tr><th>充电转换效率</th><td>&gt;96%</td></tr>
+      <tr><th>额定负载电流</th><td>12 A</td></tr>
       <tr><th>静态功耗</th><td>≤30 mA</td></tr>
       <tr><th>防护等级</th><td>IP32</td></tr>
       <tr><th>工作温度范围</th><td>-35℃ ~ 65℃</td></tr>
@@ -141,6 +143,7 @@
         document.getElementById('soc').innerHTML   = d.soc         + '<span class="unit">%</span>';
         document.getElementById('loadW').innerHTML = d.loadPower   + '<span class="unit">W</span>';
         document.getElementById('today').innerHTML = d.todayWh     + '<span class="unit">Wh</span>';
+        document.getElementById('total').innerHTML = d.totalWh     + '<span class="unit">Wh</span>';
         document.getElementById('temp').innerHTML  = d.temperature + '<span class="unit">℃</span>';
         document.getElementById('stage').textContent = d.chargeStage;
       } catch (e) { /* 忽略网络抖动 */ }
